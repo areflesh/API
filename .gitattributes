@@ -1,0 +1,2 @@
+mask_rcnn_crucifixion_cfg_0019.h5 filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
