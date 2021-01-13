@@ -1,5 +1,5 @@
 import streamlit as st
-from os import listdir
+from os import listdir, path 
 from xml.etree import ElementTree
 from numpy import zeros
 from numpy import asarray
@@ -17,6 +17,12 @@ from keras.preprocessing.image import img_to_array
 import random
 import pandas as pd
 import SessionState
+from google_drive_downloader import GoogleDriveDownloader as gdd
+
+gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',
+                                    dest_path='./model.h5',
+                                    )
+
 #st.set_page_config(layout="wide")
 class PredictionConfig(Config):
 	#DETECTION_MIN_CONFIDENCE = 0.8
@@ -32,11 +38,13 @@ cfg = PredictionConfig()
 
 
 def model_up():   
-   
     model = MaskRCNN(mode='inference', model_dir='./', config=cfg)
     # load model weights
-    model_path = 'mask_rcnn_crucifixion_cfg_0019.h5'
-    model.load_weights(model_path, by_name=True)
+    if path.isfile('model.h5'):
+        model.load_weights("model.h5", by_name=True)
+    else: 
+        gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',dest_path='./model.h5')
+        model.load_weights("model.h5", by_name=True)
     return model
 model = model_up()
 
