@@ -10,4 +10,4 @@ imgaug==0.4.0
 streamlit==0.73.0
 h5py==2.8.0
 ipython==7.19.0
-scikit-image==0.15.0
+
