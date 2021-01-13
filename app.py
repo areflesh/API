@@ -18,6 +18,8 @@ import random
 import pandas as pd
 import SessionState
 from google_drive_downloader import GoogleDriveDownloader as gdd
+from tempfile import NamedTemporaryFile
+import imageio
 
 gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',
                                     dest_path='./model.h5',
@@ -62,7 +64,7 @@ up_file = st.sidebar.file_uploader("Choose the file",("jpg","png"))
 if up_file:
     st.subheader("Detection of objects")
     my_bar = st.progress(0)
-    img = load_img(up_file)
+    img = imageio.imread(up_file)
     my_bar.progress(10)
     image = img_to_array(img)
     my_bar.progress(20)
