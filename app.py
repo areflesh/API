@@ -91,7 +91,7 @@ if up_file:
         ax.add_patch(rect)
         ax.text(x1+5,y1+10,classids[yhat['class_ids'][i]],fontsize=20, color='white')
     my_bar.empty()    
-    st.success('Done!')
+    st.success('Done! Printing results')
     col1,col2 = st.beta_columns(2)
     col1.write(fig, caption=f"Processed image", use_column_width=True)
     show_pred={}
