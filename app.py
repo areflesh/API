@@ -20,6 +20,7 @@ import SessionState
 from google_drive_downloader import GoogleDriveDownloader as gdd
 from tempfile import NamedTemporaryFile
 import imageio
+from keras import backend as K
 
 gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',
                                     dest_path='./model.h5',
@@ -38,17 +39,22 @@ class PredictionConfig(Config):
 	IMAGES_PER_GPU = 1
 cfg = PredictionConfig()
 
-
-def model_up():   
+@st.cache(allow_output_mutation=True) 
+def model_uploading():   
     model = MaskRCNN(mode='inference', model_dir='./', config=cfg)
     # load model weights
     if path.isfile('model.h5'):
         model.load_weights("model.h5", by_name=True)
+        model.keras_model._make_predict_function()
+        session = K.get_session()
     else: 
         gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',dest_path='./model.h5')
         model.load_weights("model.h5", by_name=True)
-    return model
-model = model_up()
+        model.keras_model._make_predict_function()
+        session = K.get_session()
+    return model,session
+model,session = model_uploading()
+
 
 classids=["BG","crucifixion","angel","person","crown of thorns", "horse", "dragon","bird","dog","boat","cat","book",
           "sheep","shepherd","elephant","zebra","crown","tiara","camauro","zucchetto","mitre","saturno","skull",  
@@ -62,6 +68,7 @@ st.sidebar.subheader('''"Saint George on a Bike" project''')
 up_file = st.sidebar.file_uploader("Choose the file",("jpg","png"))
 
 if up_file:
+    K.set_session(session)
     st.subheader("Detection of objects")
     my_bar = st.progress(0)
     img = imageio.imread(up_file)
