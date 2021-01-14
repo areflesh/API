@@ -109,4 +109,5 @@ if up_file:
     show_pred["Class_ids"] = classes
     show_pred["Scores"] = yhat["scores"].tolist()     
     col2.write(pd.DataFrame.from_dict(show_pred))
+    K.clear_session()
     
