@@ -21,6 +21,7 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 from tempfile import NamedTemporaryFile
 import imageio
 from keras import backend as K
+import tensorflow as tf
 
 gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',
                                     dest_path='./model.h5',
