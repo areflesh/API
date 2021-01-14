@@ -21,6 +21,8 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 from tempfile import NamedTemporaryFile
 import imageio
 from keras import backend as K
+from matplotlib.backends.backend_agg import RendererAgg
+_lock = RendererAgg.lock
 
 gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',
                                     dest_path='./model.h5',
@@ -82,25 +84,26 @@ if up_file:
     # make prediction
     my_bar.progress(40)
     yhat = model.detect(sample, verbose=0)[0]
-    fig = plt.figure(num=None, figsize=(15, 20), dpi=50, facecolor='w', edgecolor='k')
-    my_bar.progress(80)
-    ax = fig.add_subplot(111, aspect='equal')
-    # Display the image
-    ax.imshow(img)
-    #Create a Rectangle patch
-    for i in range(0,len(yhat['rois'])):
+    with _lock:
+        fig = plt.figure(num=None, figsize=(15, 20), dpi=50, facecolor='w', edgecolor='k')
+        my_bar.progress(80)
+        ax = fig.add_subplot(111, aspect='equal')
+        # Display the image
+        ax.imshow(img)
+        #Create a Rectangle patch
+        for i in range(0,len(yhat['rois'])):
         #if yhat['scores'][i]>0.89:
-        y1, x1, y2, x2 = yhat['rois'][i]
+            y1, x1, y2, x2 = yhat['rois'][i]
 		# calculate width and height of the box
-        width, height = x2 - x1, y2 - y1
+            width, height = x2 - x1, y2 - y1
 		# create the shape
-        rect = Rectangle((x1, y1), width, height, fill=False, color='red')
-        ax.add_patch(rect)
-        ax.text(x1+5,y1+10,classids[yhat['class_ids'][i]],fontsize=20, color='white')
-    my_bar.empty()    
-    st.success('Done! Printing results')
-    col1,col2 = st.beta_columns(2)
-    col1.write(fig, caption=f"Processed image", use_column_width=True)
+            rect = Rectangle((x1, y1), width, height, fill=False, color='red')
+            ax.add_patch(rect)
+            ax.text(x1+5,y1+10,classids[yhat['class_ids'][i]],fontsize=20, color='white')
+        my_bar.empty()    
+        st.success('Done! Printing results')
+        col1,col2 = st.beta_columns(2)
+        col1.write(fig, caption=f"Processed image", use_column_width=True)
     show_pred={}
     show_pred["Bounding boxes"] = yhat["rois"].tolist()
     classes = []
