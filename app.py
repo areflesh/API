@@ -24,9 +24,9 @@ from keras import backend as K
 from matplotlib.backends.backend_agg import RendererAgg
 _lock = RendererAgg.lock
 
-gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',
-                                    dest_path='./model.h5',
-                                    )
+#gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',
+ #                                   dest_path='./model.h5',
+  #                                  )
 
 #st.set_page_config(layout="wide")
 class PredictionConfig(Config):
