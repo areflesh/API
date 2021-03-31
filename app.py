@@ -45,15 +45,10 @@ cfg = PredictionConfig()
 def model_uploading():   
     model = MaskRCNN(mode='inference', model_dir='./', config=cfg)
     # load model weights
-    if path.isfile('model.h5'):
-        model.load_weights("model.h5", by_name=True)
-        model.keras_model._make_predict_function()
-        session = K.get_session()
-    else: 
-        gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',dest_path='./model.h5')
-        model.load_weights("model.h5", by_name=True)
-        model.keras_model._make_predict_function()
-        session = K.get_session()
+    gdd.download_file_from_google_drive(file_id='1MT-d27qhQgmF8IXDZrmmpaq644RWtCu1',dest_path='./model.h5')
+    model.load_weights("model.h5", by_name=True)
+    model.keras_model._make_predict_function()
+    session = K.get_session()
     return model,session
 model,session = model_uploading()
 
